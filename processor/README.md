@@ -2,9 +2,14 @@
 
 ## The Scenario
 
-You're building the backend for a banking app. Transactions are streaming in every few seconds. Your job is to process them and power the UI.
+You're building the backend for a banking app. Transactions are streaming in every few seconds. 
 
-The [`consumer.py`](consumer.py) already reads from the Redis Stream and calls your modules with the transaction. You just need to complete the TODOs in each module.
+Your job is to store them using Redis's native data structures so each query is instant:
+- No filtering through raw data
+- No sorting at query time
+- Data is stored ready to serve
+
+The [`consumer.py`](consumer.py) already reads from the Redis Stream and calls your modules. You just complete the TODOs.
 
 ---
 

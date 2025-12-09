@@ -10,15 +10,13 @@ Build a real-time transaction processing system using Redis Stack.
 - **Sorted Sets** - Ranked aggregations
 - **TimeSeries** - Time-based analytics
 
-## Quick Start
+## Get Started
 
-```bash
-docker compose up -d
-```
+1. Spin up the workshop:
+   ```bash
+   docker compose up -d
+   ```
 
-Open http://localhost:3001 to see the UI.
+2. Open the UI http://localhost:3001 and click **RedisInsight** to verify everything is running
 
-## Next Steps
-
-Head to [`processor/README.md`](processor/README.md) to start the workshop.
-
+3. Head to [`processor/README.md`](processor/README.md) to start completing the modules
