@@ -32,7 +32,7 @@ function renderBankingApp() {
                         ${renderTab('transactions', 'Transactions', status.transactions_unlocked)}
                         ${renderTab('categories', 'Spending Categories', status.categories_unlocked)}
                         ${renderTab('timeseries', 'Track Spending Over Time', status.timeseries_unlocked)}
-                        ${renderTab('search', 'Find Transactions', status.search_unlocked)}
+                        ${renderTab('search', 'Search', status.search_unlocked)}
                     </div>
                 </div>
             </div>

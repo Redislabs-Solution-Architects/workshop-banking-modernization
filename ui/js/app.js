@@ -14,9 +14,9 @@ function showToast(message, operation, redisMs, roundtripMs) {
 
     const toast = document.createElement('div');
     toast.id = 'api-toast';
-    toast.className = 'fixed bottom-4 right-4 bg-gray-900 text-white px-4 py-3 rounded-lg shadow-lg text-sm font-medium z-50 transition-opacity duration-300';
+    toast.className = 'fixed bottom-4 right-4 bg-white text-gray-600 px-4 py-3 rounded-lg shadow-md border border-gray-200 text-sm font-medium z-50 transition-opacity duration-300';
 
-    const g = (ms) => `<span style="color: #86efac">${ms}ms</span>`;
+    const g = (ms) => `<span style="color: #059669; font-weight: 600">${ms}ms</span>`;
     toast.innerHTML = `${message} | ${operation}: ${g(redisMs)} | Roundtrip: ${g(roundtripMs)}`;
     document.body.appendChild(toast);
 
@@ -33,9 +33,9 @@ function showToastTransactions(message, lrangeMs, mgetMs, roundtripMs) {
 
     const toast = document.createElement('div');
     toast.id = 'api-toast';
-    toast.className = 'fixed bottom-4 right-4 bg-gray-900 text-white px-4 py-3 rounded-lg shadow-lg text-sm font-medium z-50 transition-opacity duration-300';
+    toast.className = 'fixed bottom-4 right-4 bg-white text-gray-600 px-4 py-3 rounded-lg shadow-md border border-gray-200 text-sm font-medium z-50 transition-opacity duration-300';
 
-    const g = (ms) => `<span style="color: #86efac">${ms}ms</span>`;
+    const g = (ms) => `<span style="color: #059669; font-weight: 600">${ms}ms</span>`;
     toast.innerHTML = `${message} | LRANGE: ${g(lrangeMs)} | JSON.MGET: ${g(mgetMs)} | Roundtrip: ${g(roundtripMs)}`;
     document.body.appendChild(toast);
 
