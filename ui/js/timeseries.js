@@ -62,8 +62,11 @@ function renderTimeseriesTab() {
 
 async function loadTimeseriesData(days) {
     try {
-        const res = await fetch(`${API_BASE}/api/spending/range?days=${days}`);
+        const url = `${API_BASE}/api/spending/range?days=${days}`;
+        const res = await fetch(url);
         const data = await res.json();
+        const timing = performance.getEntriesByName(url).pop();
+        const duration = Math.round(timing?.duration ?? 0);
 
         if (data.error || !data.data) {
             updateChart([]);
@@ -73,6 +76,7 @@ async function loadTimeseriesData(days) {
 
         updateChart(data.data);
         updateSummary(data);
+        showToast(`Loaded ${data.count} data points`, 'TS.RANGE', data.redis_ms, duration);
     } catch (err) {
         console.error('Failed to load timeseries data:', err);
         updateChart([]);
@@ -181,13 +185,11 @@ function attachTimeseriesListeners() {
     document.querySelectorAll('[data-filter]').forEach(btn => {
         btn.onclick = () => {
             currentFilter = btn.dataset.filter;
-            const days = parseInt(currentFilter.replace('day', ''));
             app.render();
-            loadTimeseriesData(days);
         };
     });
 
-    // Auto-load on mount
+    // Auto-load on mount (handles both initial load and filter changes)
     const days = parseInt(currentFilter.replace('day', ''));
     loadTimeseriesData(days);
 }

@@ -4,6 +4,7 @@ TimeSeries Router
 Endpoints for spending over time data (TimeSeries module).
 """
 
+import time
 from fastapi import APIRouter, Depends, HTTPException
 from api.dependencies import get_redis_client
 from processor.modules import spending_over_time
@@ -46,7 +47,7 @@ def get_spending_range(
             # Use latest transaction timestamp as "now"
             end_ts = get_latest_timestamp(redis)
             if end_ts == 0:
-                return {"data": [], "count": 0, "total_spent": 0}
+                return {"data": [], "count": 0, "total_spent": 0, "redis_ms": 0}
             start_ts = end_ts - (days * 24 * 60 * 60 * 1000)
         elif start and end:
             start_ts = start
@@ -57,16 +58,18 @@ def get_spending_range(
                 detail="Provide either 'days' or both 'start' and 'end'"
             )
 
-        # Query TimeSeries
+        # Query TimeSeries (single Redis call)
+        t0 = time.perf_counter()
         data_points = spending_over_time.get_spending_in_range(redis, start_ts, end_ts)
+        redis_ms = round((time.perf_counter() - t0) * 1000, 2)
 
-        # Format response
-        result = [
-            {"timestamp": int(ts), "amount": float(amount)}
-            for ts, amount in data_points
-        ]
-
-        total = spending_over_time.get_total_spending_in_range(redis, start_ts, end_ts)
+        # Format response and calculate total in single pass
+        result = []
+        total = 0.0
+        for ts, amount in data_points:
+            amt = float(amount)
+            result.append({"timestamp": int(ts), "amount": amt})
+            total += amt
 
         return {
             "data": result,
@@ -74,6 +77,7 @@ def get_spending_range(
             "total_spent": total,
             "start": start_ts,
             "end": end_ts,
+            "redis_ms": redis_ms,
         }
 
     except HTTPException:

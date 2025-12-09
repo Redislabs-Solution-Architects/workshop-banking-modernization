@@ -8,10 +8,6 @@ error handling, and configuration loading from environment variables.
 import os
 from typing import Optional
 import redis
-from dotenv import load_dotenv
-
-# Load environment variables
-load_dotenv()
 
 # Global Redis client instance
 _redis_client: Optional[redis.Redis] = None
@@ -42,13 +38,7 @@ def get_redis() -> redis.Redis:
     global _redis_client
 
     if _redis_client is not None:
-        try:
-            # Verify connection is still alive
-            _redis_client.ping()
-            return _redis_client
-        except redis.ConnectionError:
-            # Connection lost, will recreate below
-            _redis_client = None
+        return _redis_client
 
     # Get configuration from environment
     host = os.getenv("REDIS_HOST", "localhost")

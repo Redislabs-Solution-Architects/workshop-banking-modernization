@@ -14,9 +14,12 @@ function renderBankingApp() {
                         <h1 class="text-xl font-light">Banking Workshop</h1>
                         <button
                             id="redis-insight-btn"
-                            class="px-4 py-2 text-sm text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                            class="px-4 py-2 text-sm text-white rounded-lg transition-colors"
+                            style="background-color: #7F3B3B;"
+                            onmouseover="this.style.backgroundColor='#6B3232'"
+                            onmouseout="this.style.backgroundColor='#7F3B3B'"
                         >
-                            RedisInsight
+                            Redis Insight
                         </button>
                     </div>
                 </div>

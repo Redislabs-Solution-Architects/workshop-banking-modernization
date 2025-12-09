@@ -8,10 +8,6 @@ import logging
 import os
 import sys
 from typing import Optional
-from dotenv import load_dotenv
-
-# Load environment variables
-load_dotenv()
 
 # ANSI color codes
 COLORS = {

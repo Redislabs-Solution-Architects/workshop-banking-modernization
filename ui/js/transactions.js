@@ -136,13 +136,17 @@ function renderTransactionDetail(tx) {
 
 async function loadTransactions() {
     try {
-        const res = await fetch(`${API_BASE}/api/transactions/recent?limit=20`);
+        const url = `${API_BASE}/api/transactions/recent?limit=20`;
+        const res = await fetch(url);
         const data = await res.json();
+        const timing = performance.getEntriesByName(url).pop();
+        const duration = Math.round(timing?.duration ?? 0);
 
         if (data.error || !data.transactions) {
             transactionsData = [];
         } else {
             transactionsData = data.transactions;
+            showToastTransactions(`Loaded ${data.transactions.length} transactions`, data.lrange_ms, data.mget_ms, duration);
         }
 
         app.render();
@@ -169,15 +173,32 @@ function attachTransactionsListeners() {
         };
     }
 
-    // Transaction row clicks
+    // Transaction row clicks - fetch from API to demonstrate JSON.GET speed
     document.querySelectorAll('[data-tx-id]').forEach(row => {
-        row.onclick = () => {
+        row.onclick = async () => {
             const txId = row.dataset.txId;
-            const tx = transactionsData.find(t => t.transactionId === txId);
-            if (tx) {
-                AppState.selectedTransaction = tx;
-                app.render();
+            try {
+                const url = `${API_BASE}/api/transactions/${txId}`;
+                const res = await fetch(url);
+                if (res.ok) {
+                    const tx = await res.json();
+                    const timing = performance.getEntriesByName(url).pop();
+                    const duration = Math.round(timing?.duration ?? 0);
+                    AppState.selectedTransaction = tx;
+                    app.render();
+                    showToast(`Retrieved ${txId}`, 'JSON.GET', tx.redis_ms, duration);
+                }
+            } catch (err) {
+                console.error('Failed to fetch transaction:', err);
             }
         };
     });
+
+    // Auto-load on first visit (use flag to prevent infinite loop)
+    if (transactionsData.length === 0 && !window._transactionsLoading) {
+        window._transactionsLoading = true;
+        loadTransactions().finally(() => {
+            window._transactionsLoading = false;
+        });
+    }
 }

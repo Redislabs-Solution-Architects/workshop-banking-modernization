@@ -4,6 +4,44 @@
  */
 
 const API_BASE = 'http://localhost:8000';
+
+/**
+ * Show a toast notification with operation name and timing
+ */
+function showToast(message, operation, redisMs, roundtripMs) {
+    const existing = document.getElementById('api-toast');
+    if (existing) existing.remove();
+
+    const toast = document.createElement('div');
+    toast.id = 'api-toast';
+    toast.className = 'fixed bottom-4 right-4 bg-gray-900 text-white px-4 py-3 rounded-lg shadow-lg text-sm font-medium z-50 transition-opacity duration-300';
+
+    const g = (ms) => `<span style="color: #86efac">${ms}ms</span>`;
+    toast.innerHTML = `${message} | ${operation}: ${g(redisMs)} | Roundtrip: ${g(roundtripMs)}`;
+    document.body.appendChild(toast);
+
+    setTimeout(() => toast.style.opacity = '0', 3500);
+    setTimeout(() => toast.remove(), 4000);
+}
+
+/**
+ * Show toast for transactions with LRANGE + JSON.MGET breakdown
+ */
+function showToastTransactions(message, lrangeMs, mgetMs, roundtripMs) {
+    const existing = document.getElementById('api-toast');
+    if (existing) existing.remove();
+
+    const toast = document.createElement('div');
+    toast.id = 'api-toast';
+    toast.className = 'fixed bottom-4 right-4 bg-gray-900 text-white px-4 py-3 rounded-lg shadow-lg text-sm font-medium z-50 transition-opacity duration-300';
+
+    const g = (ms) => `<span style="color: #86efac">${ms}ms</span>`;
+    toast.innerHTML = `${message} | LRANGE: ${g(lrangeMs)} | JSON.MGET: ${g(mgetMs)} | Roundtrip: ${g(roundtripMs)}`;
+    document.body.appendChild(toast);
+
+    setTimeout(() => toast.style.opacity = '0', 3500);
+    setTimeout(() => toast.remove(), 4000);
+}
 const POLL_INTERVAL = 2000; // 2 seconds
 
 const AppState = {
@@ -68,6 +106,9 @@ class App {
     switchTab(tab) {
         AppState.activeTab = tab;
         AppState.selectedTransaction = null;
+        if (typeof selectedCategory !== 'undefined') {
+            selectedCategory = null; // Reset categories selection
+        }
         this.render();
     }
 

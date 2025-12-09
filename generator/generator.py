@@ -21,8 +21,6 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from lib.redis_client import get_redis, close_redis
 from lib.logger import setup_logger
 from transaction_models import generate_random_transaction
-from dotenv import load_dotenv
-load_dotenv()
 logger = setup_logger(__name__)
 shutdown_requested = False
 

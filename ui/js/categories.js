@@ -23,27 +23,16 @@ function renderCategoriesTab() {
 
                 <div id="categories-list">
                     <div class="text-center py-8 text-gray-500">
-                        Click refresh to load categories
+                        Loading categories...
                     </div>
                 </div>
             </div>
 
             <!-- Category Merchants -->
-            <div class="flex-1">
-                ${selectedCategory ? `
-                    <h3 class="text-lg font-medium mb-6">
-                        Top Merchants: ${selectedCategory}
-                    </h3>
-                    <div id="category-merchants">
-                        <div class="text-center py-8 text-gray-500">
-                            Loading...
-                        </div>
-                    </div>
-                ` : `
-                    <div class="flex items-center justify-center h-full text-gray-500">
-                        Select a category to view top merchants
-                    </div>
-                `}
+            <div class="flex-1" id="merchants-panel">
+                <div class="flex items-center justify-center h-full text-gray-500">
+                    Select a category to view top merchants
+                </div>
             </div>
         </div>
     `;
@@ -51,8 +40,11 @@ function renderCategoriesTab() {
 
 async function loadCategories() {
     try {
-        const res = await fetch(`${API_BASE}/api/categories/top?limit=10`);
+        const url = `${API_BASE}/api/categories/top?limit=10`;
+        const res = await fetch(url);
         const data = await res.json();
+        const timing = performance.getEntriesByName(url).pop();
+        const duration = Math.round(timing?.duration ?? 0);
 
         if (data.error || !data.categories) {
             updateCategoriesList([]);
@@ -61,6 +53,7 @@ async function loadCategories() {
 
         categoriesData = data.categories;
         updateCategoriesList(categoriesData);
+        showToast(`Loaded ${data.categories.length} categories`, 'ZREVRANGE', data.redis_ms, duration);
     } catch (err) {
         console.error('Failed to load categories:', err);
         updateCategoriesList([]);
@@ -104,7 +97,19 @@ function updateCategoriesList(categories) {
     document.querySelectorAll('[data-category]').forEach(btn => {
         btn.onclick = () => {
             selectedCategory = btn.dataset.category;
-            app.render();
+            // Update button styles without full re-render
+            document.querySelectorAll('[data-category]').forEach(b => {
+                b.classList.toggle('bg-gray-50', b.dataset.category === selectedCategory);
+                b.classList.toggle('border-gray-300', b.dataset.category === selectedCategory);
+            });
+            // Update merchants panel header and load data
+            const panel = document.getElementById('merchants-panel');
+            if (panel) {
+                panel.innerHTML = `
+                    <h3 class="text-lg font-medium mb-6">Top Merchants: ${selectedCategory}</h3>
+                    <div id="category-merchants"></div>
+                `;
+            }
             loadCategoryMerchants(selectedCategory);
         };
     });
@@ -112,8 +117,11 @@ function updateCategoriesList(categories) {
 
 async function loadCategoryMerchants(category) {
     try {
-        const res = await fetch(`${API_BASE}/api/categories/${encodeURIComponent(category)}/top?limit=10`);
+        const url = `${API_BASE}/api/categories/${encodeURIComponent(category)}/top?limit=10`;
+        const res = await fetch(url);
         const data = await res.json();
+        const timing = performance.getEntriesByName(url).pop();
+        const duration = Math.round(timing?.duration ?? 0);
 
         if (data.error || !data.merchants) {
             updateCategoryMerchants([]);
@@ -122,6 +130,7 @@ async function loadCategoryMerchants(category) {
 
         categoryTransactions = data.merchants;
         updateCategoryMerchants(categoryTransactions);
+        showToast(`Loaded ${data.merchants.length} merchants`, 'ZREVRANGE', data.redis_ms, duration);
     } catch (err) {
         console.error('Failed to load category merchants:', err);
         updateCategoryMerchants([]);
@@ -169,10 +178,8 @@ function attachCategoriesListeners() {
     const refreshBtn = document.getElementById('refresh-categories');
     if (refreshBtn) {
         refreshBtn.onclick = () => {
+            // Refresh fetches new data (merchants are prefetched with categories)
             loadCategories();
-            if (selectedCategory) {
-                loadCategoryMerchants(selectedCategory);
-            }
         };
     }
 

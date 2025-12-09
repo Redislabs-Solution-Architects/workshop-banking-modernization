@@ -6,6 +6,7 @@ Serves data from Redis modules to UI.
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import ORJSONResponse
 import sys
 from pathlib import Path
 
@@ -14,7 +15,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from api.routers import transactions, categories, timeseries, status, stream
 
-app = FastAPI(title="Banking Workshop API")
+app = FastAPI(title="Banking Workshop API", default_response_class=ORJSONResponse)
 
 # CORS for local development
 app.add_middleware(

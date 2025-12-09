@@ -17,6 +17,6 @@ Build a real-time transaction processing system using Redis Stack.
    docker compose up -d
    ```
 
-2. Open the UI http://localhost:3001 and click **RedisInsight** to verify everything is running
+2. Open the UI http://localhost:3001 and click **Redis Insight** to verify everything is running
 
 3. Head to [`processor/README.md`](processor/README.md) to start completing the modules

@@ -9,12 +9,16 @@ function renderStartupScreen() {
     return `
         <div class="flex flex-col items-center justify-center min-h-screen bg-white p-8">
             <!-- Redis Insight Button (Top Right) -->
-            <div class="absolute top-6 right-6">
+            <div class="absolute top-6 right-6 flex items-center gap-2">
+                <span class="text-sm text-gray-600">View the data in Redis via</span>
                 <button
                     id="redis-insight-btn"
-                    class="px-4 py-2 text-sm text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                    class="px-4 py-2 text-sm text-white rounded-lg transition-colors"
+                    style="background-color: #7F3B3B;"
+                    onmouseover="this.style.backgroundColor='#6B3232'"
+                    onmouseout="this.style.backgroundColor='#7F3B3B'"
                 >
-                    View the Database via RedisInsight
+                    Redis Insight
                 </button>
             </div>
 
