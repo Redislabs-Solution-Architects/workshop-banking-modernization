@@ -20,8 +20,8 @@ function showSearchToast(message, searchMs, roundtripMs) {
     toast.innerHTML = `${message} | FT.SEARCH: ${g(searchMs)} | Roundtrip: ${g(roundtripMs)}`;
     document.body.appendChild(toast);
 
-    setTimeout(() => toast.style.opacity = '0', 3500);
-    setTimeout(() => toast.remove(), 4000);
+    setTimeout(() => toast.style.opacity = '0', 4000);
+    setTimeout(() => toast.remove(), 4500);
 }
 
 function renderSearchTab() {

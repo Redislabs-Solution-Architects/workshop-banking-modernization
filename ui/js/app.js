@@ -20,8 +20,8 @@ function showToast(message, operation, redisMs, roundtripMs) {
     toast.innerHTML = `${message} | ${operation}: ${g(redisMs)} | Roundtrip: ${g(roundtripMs)}`;
     document.body.appendChild(toast);
 
-    setTimeout(() => toast.style.opacity = '0', 3500);
-    setTimeout(() => toast.remove(), 4000);
+    setTimeout(() => toast.style.opacity = '0', 4000);
+    setTimeout(() => toast.remove(), 4500);
 }
 
 /**
@@ -39,8 +39,8 @@ function showToastTransactions(message, lrangeMs, mgetMs, roundtripMs) {
     toast.innerHTML = `${message} | LRANGE: ${g(lrangeMs)} | JSON.MGET: ${g(mgetMs)} | Roundtrip: ${g(roundtripMs)}`;
     document.body.appendChild(toast);
 
-    setTimeout(() => toast.style.opacity = '0', 3500);
-    setTimeout(() => toast.remove(), 4000);
+    setTimeout(() => toast.style.opacity = '0', 4000);
+    setTimeout(() => toast.remove(), 4500);
 }
 const POLL_INTERVAL = 2000; // 2 seconds
 

@@ -1,3 +1,5 @@
+> **Tip:** For best viewing in your IDE, use markdown preview (VS Code: `Cmd+Shift+V` on Mac, `Ctrl+Shift+V` on Windows/Linux)
+
 # Redis Banking Workshop
 
 Modernize your application with Redis Stack. Build fast, real-time systems and make your data AI-ready with vector search.

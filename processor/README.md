@@ -1,3 +1,5 @@
+> **Tip:** For best viewing in your IDE, use markdown preview (VS Code: `Cmd+Shift+V` on Mac, `Ctrl+Shift+V` on Windows/Linux)
+
 # Processor Modules
 
 You're building the backend for a banking app. Transactions stream in every few seconds.
@@ -10,12 +12,13 @@ The [`consumer.py`](consumer.py) reads from the Redis Stream and calls your modu
 
 ## Module 1: Ordered Transactions
 
-> **Redis List** — Store transaction IDs in order for instant retrieval
+**Goal:** How can we natively return the last 20 transactions?
 
-**Goal:** "Show me my last 20 transactions"
+**Redis Solution:** Lists — [Docs](https://redis.io/docs/latest/develop/data-types/lists/)
 
 **File:** [`modules/ordered_transactions.py`](modules/ordered_transactions.py)
-**Solution:** [`solutions/ordered_transactions.py`](solutions/ordered_transactions.py)
+
+**Stuck?** [`solutions/ordered_transactions.py`](solutions/ordered_transactions.py)
 
 *Complete Module 2 before restarting — the Transactions tab needs both.*
 
@@ -23,12 +26,13 @@ The [`consumer.py`](consumer.py) reads from the Redis Stream and calls your modu
 
 ## Module 2: Store Transaction
 
-> **Redis JSON** — Store full transaction objects as JSON documents
+**Goal:** How can we natively return the details for each transaction?
 
-**Goal:** "Show me the details of this transaction"
+**Redis Solution:** JSON — [Docs](https://redis.io/docs/latest/develop/data-types/json/)
 
 **File:** [`modules/store_transaction.py`](modules/store_transaction.py)
-**Solution:** [`solutions/store_transaction.py`](solutions/store_transaction.py)
+
+**Stuck?** [`solutions/store_transaction.py`](solutions/store_transaction.py)
 
 ```bash
 docker compose restart processor    # Unlocks: Transactions tab on UI (http://localhost:3001)
@@ -38,12 +42,13 @@ docker compose restart processor    # Unlocks: Transactions tab on UI (http://lo
 
 ## Module 3: Spending Categories
 
-> **Sorted Set** — Track spending by category with automatic sorting
+**Goal:** How can we natively return the top spending categories and merchants?
 
-**Goal:** "Where am I spending the most?"
+**Redis Solution:** Sorted Sets — [Docs](https://redis.io/docs/latest/develop/data-types/sorted-sets/)
 
 **File:** [`modules/spending_categories.py`](modules/spending_categories.py)
-**Solution:** [`solutions/spending_categories.py`](solutions/spending_categories.py)
+
+**Stuck?** [`solutions/spending_categories.py`](solutions/spending_categories.py)
 
 ```bash
 docker compose restart processor    # Unlocks: Categories tab on UI (http://localhost:3001)
@@ -53,35 +58,32 @@ docker compose restart processor    # Unlocks: Categories tab on UI (http://loca
 
 ## Module 4: Spending Over Time
 
-> **TimeSeries** — Store timestamped data for time-range queries
+**Goal:** How can we natively return spending analytics over a period of time?
 
-**Goal:** "How has my spending changed this week?"
+**Redis Solution:** TimeSeries — [Docs](https://redis.io/docs/latest/develop/data-types/timeseries/)
 
 **File:** [`modules/spending_over_time.py`](modules/spending_over_time.py)
-**Solution:** [`solutions/spending_over_time.py`](solutions/spending_over_time.py)
+
+**Stuck?** [`solutions/spending_over_time.py`](solutions/spending_over_time.py)
 
 ```bash
-docker compose restart processor    # Unlocks: Spending Chart on UI (http://localhost:3001 )
+docker compose restart processor    # Unlocks: Spending Chart on UI (http://localhost:3001)
 ```
 
 ---
 
 ## Module 5: Vector Search
 
-> **RedisVL** — Semantic search using embeddings and vector similarity
+**Goal:** How can we natively return transactions from a natural language input?
 
-**Goal:** "Find transactions at coffee shops"
+**Redis Solution:** Vector Search + RedisVL — [Vector Search Docs](https://redis.io/docs/latest/develop/ai/search-and-query/query/vector-search/) | [RedisVL Docs](https://docs.redisvl.com/)
 
 **File:** [`modules/vector_search.py`](modules/vector_search.py)
-**Solution:** [`solutions/vector_search.py`](solutions/vector_search.py)
 
-**Implement:**
-- Schema attrs (dims, distance_metric, algorithm, datatype)
-- JSON.SET to store embeddings
-- VectorQuery to search
+**Stuck?** [`solutions/vector_search.py`](solutions/vector_search.py)
 
 ```bash
-docker compose restart processor    # Unlocks: Transaction Search on UI (http://localhost:3001 )
+docker compose restart processor    # Unlocks: Transaction Search on UI (http://localhost:3001)
 ```
 
 *Note: Embeddings only apply to new transactions after restart.*
